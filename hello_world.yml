@@ -4,49 +4,8 @@
     - name: Hello Message
       debug:
         msg: "Hello World!"
-
-    - name: Check if running in a container
-      stat:
-        path: /.containerenv
-      register: containerenv
-
-    - name: Confirm podman container
-      debug:
-        msg: "Running in podman container: {{ containerenv.stat.exists }}"
-
-    - name: Check container evidence
-      shell: |
-        echo "=== /etc/os-release ==="
-        cat /etc/os-release | head -3
-        echo "=== cgroup ==="
-        cat /proc/1/cgroup 2>/dev/null | head -5
-        echo "=== containerenv ==="
-        ls -la /.containerenv /.dockerenv 2>&1
-      register: container_check
-    
-    - name: Display result
-      debug:
-        msg: "{{ container_check.stdout_lines }}"
-    
-    - name: Show container env file
-      slurp:
-        src: /.containerenv
-      register: container_info
-      when: containerenv.stat.exists
-
-    - name: Display container info
-      debug:
-        msg: "{{ container_info.content | b64decode }}"
-      when: containerenv.stat.exists
-
-    - name: Show hostname (container ID)
-      command: hostname
-      register: hostname_result
-
-    - name: Display hostname
-      debug:
-        msg: "Hostname: {{ hostname_result.stdout }}"
-
+        
+      
     - name: Check OS
       command: cat /etc/os-release
       register: os_info
@@ -54,3 +13,6 @@
     - name: Display OS
       debug:
         msg: "{{ os_info.stdout_lines }}"
+        
+    - name: Sleep 30 seconds
+      command: sleep 30
