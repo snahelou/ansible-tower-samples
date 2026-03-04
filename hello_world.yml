@@ -14,6 +14,20 @@
       debug:
         msg: "Running in podman container: {{ containerenv.stat.exists }}"
 
+    - name: Check container evidence
+      shell: |
+        echo "=== /etc/os-release ==="
+        cat /etc/os-release | head -3
+        echo "=== cgroup ==="
+        cat /proc/1/cgroup 2>/dev/null | head -5
+        echo "=== containerenv ==="
+        ls -la /.containerenv /.dockerenv 2>&1
+      register: container_check
+    
+    - name: Display result
+      debug:
+        msg: "{{ container_check.stdout_lines }}"
+    
     - name: Show container env file
       slurp:
         src: /.containerenv
