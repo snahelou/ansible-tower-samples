@@ -1,0 +1,18 @@
+- name: Ansible Vault Demo
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Show clear text variables
+      ansible.builtin.debug:
+        msg: "Database: {{ db_host }}:{{ db_port }}/{{ db_name }}"
+
+    - name: Show decrypted vault variables
+      ansible.builtin.debug:
+        msg: |
+          DB User:        {{ db_user }}
+          DB Password:    {{ db_password }}
+          API Secret Key: {{ api_secret_key }}
+
+    - name: Prove vault values are decrypted at runtime
+      ansible.builtin.debug:
+        msg: "Connection string: mysql://{{ db_user }}:{{ db_password }}@{{ db_host }}:{{ db_port }}/{{ db_name }}"
